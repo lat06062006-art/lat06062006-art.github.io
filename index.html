@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -7,13 +6,14 @@ HTML
     <title>WEARAI - Tủ Đồ Số & Trợ Lý Phối Đồ Thông Minh</title>
     <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
             --secondary: #06b6d4;
             --accent: #f43f5e;
+            --success: #10b981;
             --bg-main: #f8fafc;
             --surface: #ffffff;
             --text-main: #0f172a;
@@ -24,28 +24,50 @@ HTML
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; }
 
-        /* Sidebar Navigation */
+        /* AUTH CONTAINER (ĐĂNG NHẬP / ĐĂNG KÝ) */
+        #auth-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: var(--surface);
+            width: 100%;
+            max-width: 550px;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .auth-header { text-align: center; margin-bottom: 24px; }
+        .auth-header h2 { font-size: 28px; font-weight: 800; color: var(--primary); }
+        .auth-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+        .auth-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+        .auth-tab-btn { flex: 1; padding: 12px; text-align: center; font-weight: 600; cursor: pointer; color: var(--text-muted); }
+        .auth-tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
+
+        /* MAIN APP LAYOUT */
+        #app-screen { display: none; min-height: 100vh; }
         aside { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; }
         .brand { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 32px; padding: 0 12px; }
-        .brand i { font-size: 26px; }
         
-        .nav-group { margin-bottom: 24px; }
+        .nav-group { margin-bottom: 20px; }
         .nav-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; padding: 0 12px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-muted); text-decoration: none; border-radius: 8px; font-weight: 500; margin-bottom: 4px; transition: all 0.2s; cursor: pointer; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-muted); text-decoration: none; border-radius: 8px; font-weight: 500; margin-bottom: 4px; cursor: pointer; transition: all 0.2s; }
         .nav-item:hover, .nav-item.active { background: #eeef2ff; color: var(--primary); }
         .nav-item i { width: 20px; text-align: center; font-size: 18px; }
 
         .user-profile-menu { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: #e0e7ff; color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; }
-        .user-info { flex: 1; overflow: hidden; }
-        .user-name { font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-        .user-role { font-size: 12px; color: var(--text-muted); }
-
-        /* Main Content Area */
-        main { flex: 1; margin-left: 260px; padding: 32px; max-width: 1400px; }
         
+        main { flex: 1; margin-left: 260px; padding: 32px; max-width: 1400px; }
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
         .page-title h1 { font-size: 26px; font-weight: 700; }
         .page-title p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
@@ -55,478 +77,43 @@ HTML
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Components & Buttons */
+        /* COMPONENTS */
         .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-hover); }
         .btn-secondary { background: #f1f5f9; color: var(--text-main); }
-        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-success { background: var(--success); color: white; }
 
         .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow); margin-bottom: 24px; }
-        
         .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
-        /* Wardrobe Items */
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
+
+        /* WARDROBE CARD */
         .item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: relative; transition: all 0.2s; }
         .item-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
         .item-img { height: 180px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; }
         .item-img img { max-height: 80%; max-width: 80%; object-fit: contain; }
         .item-badge { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--text-muted); }
         .item-body { padding: 14px; }
-        .item-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-        .item-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; }
 
-        /* Form Controls */
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
-        .form-control:focus { border-color: var(--primary); }
-
-        /* Filter Pills */
-        .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .chip { padding: 8px 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text-muted); }
-        .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        /* Weather Widget */
+        /* WEATHER WIDGET */
         .weather-widget { background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; padding: 20px; border-radius: var(--radius); display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .weather-temp { font-size: 32px; font-weight: 700; }
 
-        /* Outfit Card */
-        .outfit-builder { display: flex; gap: 12px; background: #f8fafc; padding: 16px; border-radius: var(--radius); border: 1px dashed var(--border); margin-bottom: 16px; }
-        .outfit-piece { flex: 1; text-align: center; background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
-        .outfit-piece img { height: 80px; object-fit: contain; margin-bottom: 8px; }
+        /* STATS CARD */
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+        .stat-val { font-size: 28px; font-weight: 800; color: var(--primary); margin: 8px 0; }
+        .stat-lbl { font-size: 13px; color: var(--text-muted); }
 
-        /* Table */
+        /* TABLE */
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
 
-        /* Modals */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-        .modal.active { display: flex; }
-        .modal-body { background: white; width: 100%; max-width: 500px; border-radius: var(--radius); padding: 24px; position: relative; }
-        .modal-close { position: absolute; top: 16px; right: 16px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
-    </style>
-</head>
-<body>
-
-    <!-- SIDEBAR NAVIGATION -->
-    <aside>
-        <div class="brand">
-            <i class="fa-solid fa-shirt"></i> WEARAI
-        </div>
-
-        <div class="nav-group">
-            <div class="nav-title">Cá nhân (User)</div>
-            <div class="nav-item active" onclick="switchTab('wardrobe')">
-                <i class="fa-solid fa-boxes-packing"></i> Tủ đồ số
-            </div>
-            <div class="nav-item" onclick="switchTab('stylist')">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Trợ lý AI Stylist
-            </div>
-            <div class="nav-item" onclick="switchTab('lookbook')">
-                <i class="fa-solid fa-bookmark"></i> Outfit đã lưu
-            </div>
-            <div class="nav-item" onclick="switchTab('calendar')">
-                <i class="fa-solid fa-calendar-days"></i> Lịch trang phục
-            </div>
-            <div class="nav-item" onclick="switchTab('analytics')">
-                <i class="fa-solid fa-chart-pie"></i> Phân tích tủ đồ
-            </div>
-        </div>
-
-        <div class="nav-group">
-            <div class="nav-title">Đối tác & Quản trị</div>
-            <div class="nav-item" onclick="switchTab('partner')">
-                <i class="fa-solid fa-store"></i> Partner Catalog
-            </div>
-            <div class="nav-item" onclick="switchTab('admin')">
-                <i class="fa-solid fa-user-gear"></i> Trang Admin CMS
-            </div>
-        </div>
-
-        <div class="user-profile-menu">
-            <div class="avatar">AN</div>
-            <div class="user-info">
-                <div class="user-name">Anh Thu</div>
-                <div class="user-role">Thành viên Premium</div>
-            </div>
-            <i class="fa-solid fa-right-from-bracket" style="color: var(--text-muted); cursor: pointer;" onclick="alert('Đã đăng xuất hệ thống!')"></i>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main>
-
-        <!-- TAB 1: TỦ ĐỒ SỐ -->
-        <section id="tab-wardrobe" class="tab-content active">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Tủ Đồ Số Cá Nhân</h1>
-                    <p>Quản lý và số hóa toàn bộ quần áo, phụ kiện của bạn</p>
-                </div>
-                <button class="btn btn-primary" onclick="openModal('modal-add-item')">
-                    <i class="fa-solid fa-plus"></i> Thêm món đồ mới
-                </button>
-            </div>
-
-            <div class="filter-bar">
-                <div class="chip active">Tất cả (8)</div>
-                <div class="chip">Áo (Top)</div>
-                <div class="chip">Quần/Váy (Bottom)</div>
-                <div class="chip">Giày dép</div>
-                <div class="chip">Phụ kiện</div>
-            </div>
-
-            <div class="grid-4" id="wardrobe-grid">
-                <!-- Items list dynamic rendered via JS -->
-            </div>
-        </section>
-
-        <!-- TAB 2: TRỢ LÝ AI STYLIST -->
-        <section id="tab-stylist" class="tab-content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Trợ Lý Phối Đồ Thông Minh AI</h1>
-                    <p>Tự động tạo Outfit trọn bộ dựa trên ngữ cảnh và thời tiết thực tế</p>
-                </div>
-            </div>
-
-            <!-- Weather Banner -->
-            <div class="weather-widget">
-                <div>
-                    <div style="font-size: 14px; opacity: 0.9;">Thời tiết hôm nay tại Hà Nội</div>
-                    <div class="weather-temp">24°C - Nắng nhẹ</div>
-                    <div style="font-size: 13px; opacity: 0.8; margin-top: 4px;">Thích hợp trang phục thoáng mát, phong cách Casual / Office</div>
-                </div>
-                <i class="fa-solid fa-sun-cloud" style="font-size: 48px; opacity: 0.9;"></i>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 16px;">Tạo gợi ý phối đồ mới</h3>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label class="form-label">Chọn bối cảnh / Hoàn cảnh sử dụng</label>
-                        <select class="form-control" id="stylist-event">
-                            <option>Đi học / Đi làm (Office Casual)</option>
-                            <option>Đi chơi / Dạo phố (Streetwear)</option>
-                            <option>Dự tiệc / Sự kiện (Elegant)</option>
-                            <option>Tập thể thao (Activewear)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Chọn món đồ gốc (Ưu tiên phối kèm)</label>
-                        <select class="form-control">
-                            <option>-- Không chọn (Để AI tự do phối) --</option>
-                            <option>Áo sơ mi trắng Poplin</option>
-                            <option>Quần Jean Slimfit Xanh</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="generateOutfit()">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Tạo Bộ Phối Ngay
-                </button>
-            </div>
-
-            <!-- AI Output Result -->
-            <div id="ai-outfit-result" style="display: none;">
-                <h3 style="margin-bottom: 16px;">Gợi ý Outfit dành cho bạn hôm nay</h3>
-                
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <span style="font-weight: 700; color: var(--primary);">OUTFIT #1: Smart Casual Thanh Lịch</span>
-                        <span style="font-size: 12px; background: #e0e7ff; color: var(--primary); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Độ hợp ngữ cảnh: 98%</span>
-                    </div>
-
-                    <div class="outfit-builder">
-                        <div class="outfit-piece">
-                            <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=300" alt="Top">
-                            <div style="font-size: 13px; font-weight: 600;">Áo Sơ Mi Trắng</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">Từ tủ đồ của bạn</div>
-                        </div>
-                        <div class="outfit-piece">
-                            <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300" alt="Bottom">
-                            <div style="font-size: 13px; font-weight: 600;">Quần Jean Xanh</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">Từ tủ đồ của bạn</div>
-                        </div>
-                        <div class="outfit-piece" style="border: 2px dashed var(--accent); background: #fff5f5;">
-                            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300" alt="Shoes">
-                            <div style="font-size: 13px; font-weight: 600; color: var(--accent);">Sneaker Trắng Minimalist</div>
-                            <div style="font-size: 11px; color: var(--accent); font-weight: 600;">Gợi ý mua bổ sung</div>
-                        </div>
-                    </div>
-
-                    <!-- Affiliate Gap Recommendation -->
-                    <div style="background: #fff1f2; border: 1px solid #fecdd3; padding: 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 13px; font-weight: 700; color: #9f1239;">Món đồ thiếu: Sneaker Trắng Nam/Nữ</div>
-                            <div style="font-size: 12px; color: #be123c;">Tủ đồ của bạn chưa có đôi giày trắng tương thích để hoàn thiện set đồ này.</div>
-                        </div>
-                        <a href="https://canifa.com" target="_blank" class="btn" style="background: var(--accent); color: white; text-decoration: none; font-size: 13px;">
-                            <i class="fa-solid fa-cart-shopping"></i> Mua sắm ngay (Canifa)
-                        </a>
-                    </div>
-
-                    <div style="margin-top: 16px; display: flex; gap: 10px;">
-                        <button class="btn btn-primary" onclick="alert('Đã lưu Outfit vào Lookbook cá nhân!')"><i class="fa-solid fa-bookmark"></i> Lưu Outfit này</button>
-                        <button class="btn btn-secondary" onclick="generateOutfit()"><i class="fa-solid fa-rotate"></i> Phối lại bộ khác</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 3: OUTFIT ĐÃ LƯU (LOOKBOOK) -->
-        <section id="tab-lookbook" class="tab-content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Bộ Sưu Tập Lookbook Đã Lưu</h1>
-                    <p>Danh sách các công thức phối đồ bạn yêu thích</p>
-                </div>
-            </div>
-            <div class="grid-2">
-                <div class="card">
-                    <h4>Outfit Đi Học Thứ 2</h4>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Áo sơ mi trắng + Quần Tây Đen + Giày Loafer</p>
-                    <button class="btn btn-secondary" style="font-size: 12px;"><i class="fa-solid fa-calendar-plus"></i> Đưa vào lịch mặc</button>
-                </div>
-                <div class="card">
-                    <h4>Set Dạo Phố Cuối Tuần</h4>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Áo Thun Basic + Quần Short + Sneaker</p>
-                    <button class="btn btn-secondary" style="font-size: 12px;"><i class="fa-solid fa-calendar-plus"></i> Đưa vào lịch mặc</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 4: LỊCH TRANG PHỤC -->
-        <section id="tab-calendar" class="tab-content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Kế Hoạch & Lịch Sử Sử Dụng Trang Phục</h1>
-                    <p>Lập kế hoạch mặc đồ theo tuần và đếm tần suất sử dụng</p>
-                </div>
-            </div>
-            <div class="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Thứ / Ngày</th>
-                            <th>Trang phục dự kiến</th>
-                            <th>Bối cảnh</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><b>Thứ Hai</b> (Hôm nay)</td>
-                            <td>Áo Sơ Mi Trắng + Quần Jean Xanh</td>
-                            <td>Đi học / Đi làm</td>
-                            <td><span style="color: green; font-weight: 600;">✓ Đã xác nhận mặc</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Thứ Ba</b></td>
-                            <td>Áo Polo Xám + Quần Kaki Tây</td>
-                            <td>Đi làm</td>
-                            <td><button class="btn btn-secondary" style="font-size: 11px;">Gán Outfit</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- TAB 5: PHÂN TÍCH TỦ ĐỒ -->
-        <section id="tab-analytics" class="tab-content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Báo Cáo Phân Tích Khoảng Trống Tủ Đồ</h1>
-                    <p>Phân tích tỷ lệ, màu sắc và cảnh báo đồ lâu chưa mặc</p>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Cơ cấu Tủ đồ hiện tại</h3>
-                    <div style="margin-top: 16px;">
-                        <p style="font-size: 13px;">Áo (Top): <b>45%</b></p>
-                        <p style="font-size: 13px;">Quần/Váy (Bottom): <b>35%</b></p>
-                        <p style="font-size: 13px;">Giày & Phụ kiện: <b>20%</b></p>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 style="color: var(--accent);">Cảnh báo Đồ bị "Lãng quên" (> 30 ngày)</h3>
-                    <div style="margin-top: 16px;">
-                        <p style="font-size: 13px;">⚠️ <b>Áo khoác Blazer Caro</b> - Chưa mặc 42 ngày</p>
-                        <p style="font-size: 13px;">⚠️ <b>Quần Short Kaki Vàng</b> - Chưa mặc 35 ngày</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 6: PARTNER CATALOG -->
-        <section id="tab-partner" class="tab-content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Cổng Thông Tin Đối Tác Nhãn Hàng</h1>
-                    <p>Nạp dữ liệu Catalog và cài đặt Tiếp thị liên kết (Affiliate Links)</p>
-                </div>
-                <button class="btn btn-primary" onclick="alert('Mở form nạp Catalog CSV/API')">Nạp Catalog Mới</button>
-            </div>
-            <div class="card">
-                <h3>Danh mục sản phẩm tiếp thị đang hoạt động</h3>
-                <table style="margin-top: 16px;">
-                    <thead>
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Nhãn hàng</th>
-                            <th>Tỷ lệ Hoa hồng</th>
-                            <th>Lượt Click</th>
-                            <th>Doanh thu phát sinh</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Sneaker Trắng Minimalist</td>
-                            <td>Canifa</td>
-                            <td>10%</td>
-                            <td>124 clicks</td>
-                            <td>1,250,000 VNĐ</td>
-                        </tr>
-                        <tr>
-                            <td>Áo Blazer Unisex Black</td>
-                            <td>IVY Moda</td>
-                            <td>12%</td>
-                            <td>85 clicks</td>
-                            <td>2,100,000 VNĐ</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- TAB 7: ADMIN CMS -->
-        <section id="tab-admin" class="tab-content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Trang Quản Trị Hệ Thống (Admin CMS)</h1>
-                    <p>Giám sát người dùng, đối soát tài chính và cấu hình AI Rules</p>
-                </div>
-            </div>
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Tổng quan Hệ thống</h3>
-                    <div style="margin-top: 12px; font-size: 14px;">
-                        <p>Tổng số người dùng: <b>1,240</b></p>
-                        <p>Số món đồ đã số hóa: <b>18,500</b></p>
-                        <p>Tổng doanh thu hoa hồng Affiliate: <b>14,800,000 VNĐ</b></p>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>Quản lý Quy tắc Phối đồ AI</h3>
-                    <button class="btn btn-secondary" style="margin-top: 12px;">Cấu hình Bánh xe màu sắc</button>
-                    <button class="btn btn-secondary" style="margin-top: 12px;">Cập nhật Tiêu chí Món đồ thiếu</button>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL ADD WARDROBE ITEM -->
-    <div class="modal" id="modal-add-item">
-        <div class="modal-body">
-            <span class="modal-close" onclick="closeModal('modal-add-item')">&times;</span>
-            <h3 style="margin-bottom: 16px;">Thêm Món Đồ Vào Tủ Đồ Số</h3>
-            <div class="form-group">
-                <label class="form-label">Tên món đồ</label>
-                <input type="text" id="new-item-name" class="form-control" placeholder="Ví dụ: Áo Sơ Mi Poplin">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Phân loại</label>
-                <select id="new-item-cat" class="form-control">
-                    <option>Áo (Top)</option>
-                    <option>Quần/Váy (Bottom)</option>
-                    <option>Giày dép</option>
-                    <option>Phụ kiện</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Tải lên hình ảnh (Tự động bóc nền bằng AI Vision)</label>
-                <input type="file" class="form-control">
-            </div>
-            <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="addNewItem()">Xác Nhận Thêm Vào Tủ Đồ</button>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // Mock Wardrobe Data
-        const wardrobeData = [
-            { id: 1, name: "Áo Sơ Mi Trắng", category: "Áo (Top)", img: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=300", color: "Trắng" },
-            { id: 2, name: "Quần Jean Slimfit", category: "Quần/Váy (Bottom)", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300", color: "Xanh" },
-            { id: 3, name: "Áo Polo Xám Casual", category: "Áo (Top)", img: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300", color: "Xám" },
-            { id: 4, name: "Áo Khoác Blazer Black", category: "Áo (Top)", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300", color: "Đen" }
-        ];
-
-        // Render Wardrobe Items
-        function renderWardrobe() {
-            const grid = document.getElementById('wardrobe-grid');
-            grid.innerHTML = '';
-            wardrobeData.forEach(item => {
-                grid.innerHTML += `
-                    <div class="item-card">
-                        <div class="item-img">
-                            <img src="${item.img}" alt="${item.name}">
-                            <span class="item-badge">${item.category}</span>
-                        </div>
-                        <div class="item-body">
-                            <div class="item-title">${item.name}</div>
-                            <div class="item-meta">
-                                <span>Màu: ${item.color}</span> • <span>Đã bóc nền AI</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Tab Switching Logic
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        // Modals Logic
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        // Add Item Logic
-        function addNewItem() {
-            const name = document.getElementById('new-item-name').value;
-            const cat = document.getElementById('new-item-cat').value;
-            if(name) {
-                wardrobeData.unshift({
-                    id: Date.now(),
-                    name: name,
-                    category: cat,
-                    img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300",
-                    color: "Tự động"
-                });
-                renderWardrobe();
-                closeModal('modal-add-item');
-                alert('Đã bóc nền AI và thêm món đồ thành công!');
-            }
-        }
-
-        // Generate AI Outfit Logic
-        function generateOutfit() {
-            document.getElementById('ai-outfit-result').style.display = 'block';
-            window.scrollTo({ top: 400, behavior: 'smooth' });
-        }
-
-        // Initialize App
-        renderWardrobe();
-    </script>
-</body>
-</html>
+        /* MOD
