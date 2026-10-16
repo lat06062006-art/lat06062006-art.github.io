@@ -61,7 +61,7 @@
         .nav-group { margin-bottom: 20px; }
         .nav-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; padding: 0 12px; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-muted); text-decoration: none; border-radius: 8px; font-weight: 500; margin-bottom: 4px; cursor: pointer; transition: all 0.2s; }
-        .nav-item:hover, .nav-item.active { background: #eeef2ff; color: var(--primary); }
+        .nav-item:hover, .nav-item.active { background: #eef2ff; color: var(--primary); }
         .nav-item i { width: 20px; text-align: center; font-size: 18px; }
 
         .user-profile-menu { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
@@ -116,4 +116,52 @@
         th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
         th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
 
-        /* MOD
+        /* MODAL */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-body { background: white; width: 100%; max-width: 550px; border-radius: var(--radius); padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 16px; right: 16px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: ĐĂNG NHẬP & ĐĂNG KÝ (ONBOARDING THÔNG SỐ CƠ THỂ) -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>WEARAI</h2>
+                <p>Tủ đồ số cá nhân & Trợ lý phối đồ thông minh AI</p>
+            </div>
+
+            <div class="auth-tabs">
+                <div class="auth-tab-btn active" onclick="switchAuthTab('login')">Đăng Nhập</div>
+                <div class="auth-tab-btn" onclick="switchAuthTab('register')">Đăng Ký Tài Khoản</div>
+            </div>
+
+            <!-- FORM ĐĂNG NHẬP -->
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email hoặc Số điện thoại</label>
+                    <input type="text" class="form-control" required placeholder="nhapemail@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập Trang Web
+                </button>
+            </form>
+
+            <!-- FORM ĐĂNG KÝ (THU THẬP THÔNG SỐ PHỤC VỤ AI STYLIST) -->
+            <form id="form-register" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Họ và Tên</label>
+                    <input type="text" id="reg-name" class="form-control" required placeholder="Nguyễn Văn A">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Giới tính</label>
+                        <select id="reg-gender" class="form-control" required>
+                            <option value="Nam">Nam</option>
+                            <option value="N
